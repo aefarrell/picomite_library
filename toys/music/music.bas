@@ -43,5 +43,5 @@ Sub incr
 End Sub
 
 sub MM.END
-  print "thanks for playing
+  print "thanks for playing"
 end sub
