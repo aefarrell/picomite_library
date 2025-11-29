@@ -1,5 +1,3 @@
-'graphs parametric equations x(t) and y(t)
-
 Option explicit
 Option angle degrees
 
@@ -13,7 +11,11 @@ Dim string funx$
 Dim string funy$
 Dim float tmin : Dim float tmax
 
+'set listener for keypress
+On KEY keypress
+
 ask:
+CLS
 Input "x(t)="; funx$
 Input "y(t)="; funy$
 Input "t range (min,max)"; tmin,tmax
@@ -21,7 +23,22 @@ Input "t range (min,max)"; tmin,tmax
 CLS
 draw_axes 10
 draw_fun funx$, funy$, tmin, tmax
-GoTo ask
+Pause 60000 'pause for a while
+End
+
+Sub keypress
+ Local a$ As string
+ a$ = Inkey$
+ Select Case Asc(a$)
+ Case 16 'ctrl-p for print screen
+  Local fname$ As string
+  fname$ = "screenshot-"+Str$(Rnd()*1000,0,0)+".bmp"
+  Save Image fname$,0,0,319,319
+ Case Else
+  GoTo Ask
+ End Select
+End Sub
+
 
 Sub fill_points funx$, funy$, numpts,   tmin, tmax
  Local integer n = numpts

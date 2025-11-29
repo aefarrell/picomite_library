@@ -34,7 +34,7 @@
               </div>
               <div class="card-body">
                 <div class="card-text">
-                    {% if card.screenshot %}<img src="images/{{ card.screenshot }}" class="d-block user-select-none" width="80%" />{% endif %}
+                    {% if card.screenshot %}<img src="images/{{ card.screenshot }}" class="d-block user-select-none" />{% endif %}
                     <p>{{ card.description }}</p>
                     <a href="{{ card.program }}.html"><button type="button" class="btn btn-success">Source Code</button></a>
                </div>
