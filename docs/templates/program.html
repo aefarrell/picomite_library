@@ -25,10 +25,21 @@
               </div>
               <div class="card-body">
                 <div class="card-text">
-                    {% if program.screenshot %}<img src="images/{{ program.screenshot }}" class="d-block user-select-none" />{% endif %}
+                  <div class="row m-0">
+                    {% if program.screenshot %}<div class="col-md-5"><img src="images/{{ program.screenshot }}" class="d-block user-select-none" /></div><div class="col-md-5 p-0">
+         {% else %}<div class="col-md-10 p-0">{% endif %}
                     <p>{{ program.description }}</p>
+                   </div>
+                   <div class="col-md-2 p-0">
+                    <p class="text-end"><a href="{{ program.url }}"><button type="button" class="btn btn-secondary">Github</button></a></p>
+                   </div>
+                  </div>
+                  <div class="row m-0">
+                    <div class="col-md-12 p-0">
                     <p><hr /></p>
                     <pre class="text-success">{{ program.code }}</pre>
+                    </div>
+                  </div>
                </div>
               </div>
              </div>
