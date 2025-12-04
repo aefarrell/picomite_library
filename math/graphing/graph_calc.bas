@@ -16,8 +16,8 @@ On KEY keypress
 
 ask:
 CLS
-Input "x(t)="; funx$
-Input "y(t)="; funy$
+Line Input "x(t)="; funx$
+Line Input "y(t)="; funy$
 Input "t range (min,max)"; tmin,tmax
 
 CLS
@@ -33,7 +33,7 @@ Sub keypress
  Case 16 'ctrl-p for print screen
   Local fname$ As string
   fname$ = "screenshot-"+Str$(Rnd()*1000,0,0)+".bmp"
-  Save Image fname$,0,0,319,319
+  Save Image fname$
  Case Else
   GoTo Ask
  End Select
