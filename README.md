@@ -10,7 +10,7 @@ The structure is like this:
 - `utils\` useful utilities
 - `toys\` little toy programs
 
-## Transferring with the PicoCalc
+## Transferring Files with the PicoCalc
 
 The fastest way to transfer files, in bulk, is via the SD card -- if you have an SD card reader. Alternatively you can connect to the PicoCalc via the serial connection. First turn on the PicoCalc and connect to your computer via the USB-C port on the PicoCalc.
 
@@ -36,7 +36,7 @@ Scrolling through the output I find the following
 > [!TIP]
 > I use popOS at home and I found initially that the PicoCalc would connect, attach to ttyUSB0, and immediately disconnect. The solution was to uninstall `brltty`.
 
-Which is the PicoCalc being detected and attached to `/dev/ttyUSB0`. The user requires read-write permission to connect to the device, which can be accomplished by adding it to the group the device is in with `ls`.
+Which is the PicoCalc being detected and attached to `/dev/ttyUSB0`. The user requires read-write permission to connect to the device, which can be accomplished by adding the user to the same group as the device.
 
 ~~~bash
 
@@ -44,18 +44,16 @@ ls -lah /dev/ttyUSB0
 
 ~~~
 
-
-On my machine it is in the group `dialout`
-
 ~~~
 crw-rw---- 1 root dialout 188, 0 Dec  3 19:06 /dev/ttyUSB0
 ~~~
 
-After the user has been added to the group (and possibly after logging out and back in), the PicoCalc can be connected to without having to use `sudo`.
+
+On my machine it is in the group `dialout`. After the user has been added to the group (and possibly after logging out and back in), the PicoCalc can be connected to without having to use `sudo`.
 
 ### Configuring minicom
 
-Minicom will look for a config file in `$HOME` when given an appropriate name, and if one isn't found it will create it, e.g. this creates a config file named 'picocalc'
+Minicom will look for a config file in `$HOME` when given an appropriate name and, if one isn't found, will create one, e.g. this creates a config file named 'picocalc'
 
 ~~~bash
 
@@ -63,7 +61,7 @@ minicom picocalc
 
 ~~~
 
-From within minicom hit `Ctrl-A` followed by `o` to open the configuration menu and adjust the default settings to the PicoCalc. This will save a `.minirc.picocalc` in `$HOME`, mine looks like this:
+From within minicom hit `Ctrl-A` followed by `o` to open the configuration menu and adjust the default settings to the PicoCalc. This will save a `.minirc.picocalc` file in `$HOME`, mine looks like this:
 
 ~~~
 # Machine-generated file - use setup menu in minicom to change parameters.
@@ -87,9 +85,9 @@ This opens a terminal and any keystrokes are mirrored on the PicoCalc. To send a
 xmodem receive "your/directory/and/file"
 ~~~
 
-Then hit `Ctrl-A` followed by `s` in minicom and select the file you wish to send. Since minicom is connected as a terminal this all be done in the same terminal window.
+Where the directory and filename is what it will be saved as on the PicoCalc. Then hit `Ctrl-A` followed by `s` in minicom and select the file you wish to send. Since minicom is connected as a terminal this can all be done in the same terminal window.
 
-To do the reverse, first enter the following into the PicoCalc
+To send files from the PicoCalc to the computer, first enter the following into the PicoCalc
 
 ~~~
 xmodem send "your/directory/and/file"
