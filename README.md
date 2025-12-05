@@ -48,6 +48,11 @@ ls -lah /dev/ttyUSB0
 crw-rw---- 1 root dialout 188, 0 Dec  3 19:06 /dev/ttyUSB0
 ~~~
 
+~~~bash
+
+sudo usermod -aG dialout $USER
+
+~~~
 
 On my machine it is in the group `dialout`. After the user has been added to the group (and possibly after logging out and back in), the PicoCalc can be connected to without having to use `sudo`.
 

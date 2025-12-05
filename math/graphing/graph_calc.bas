@@ -1,3 +1,7 @@
+/* 
+  Graphing calculator for parametric equations
+  Use ctrl-p to save a screenshot
+*/
 Option explicit
 Option angle degrees
 
