@@ -1,4 +1,4 @@
-/* 
+/*
   A simple snake toy using sprites
   Use arrow keys to change direction
   q to quit
@@ -21,6 +21,7 @@ Dim integer px = w\2 'head x position
 Dim integer py = h\2 'head y position
 Dim integer vx=1 'head x velocity
 Dim integer vy=0 'heax y velocity
+Dim integer stop_flag=0 'snake stopped?
 
 'create a box for each snake segment
 'read it into a sprite
@@ -30,10 +31,15 @@ For i=0 To snklen
  Sprite read i+2,px,py,snkw,snkw
 Next i
 
+'save a red sprite for collisions
+Const hit = RGB(red)
+Box px,py,snkw,snkw,2,hit,hit
+Sprite read snklen+3,px,py,snkw,snkw
+
 'initialize snake head and body positions
 Dim x(snklen), y(snklen)
-For i=0 to snklen
- x(i) = px - i*snkw
+For i=0 To snklen
+ x(i) = px - i*(snkw+2)
  y(i) = py
 Next i
 
@@ -46,6 +52,7 @@ Next i
 
 'main loop
 On key changedir
+Sprite interrupt collision
 Do
  move
  update
@@ -57,19 +64,29 @@ End
 
 Sub move
  'update x
- px = px + vx*snkw
- If px > w-snkw Then px=w-snkw:vx=-1*vx
- If px < 1 Then px=1:vx=-1*vx
+ new.px = px + vx*(snkw+2)
+ If new.px > w-snkw Then new.px=px:collision
+ If new.px < 1 Then new.px=px:collision
+ px = new.px
 
  'update y
- py = py + vy*snkw
- If py > h-snkw Then py=h-snkw:vy=-1*vy
- If py < 1 Then py=1:vy=-1*vy
+ new.py = py + vy*(snkw+2)
+ If new.py > h-snkw Then new.py=py:collision
+ If new.py < 1 Then new.py=py:collision
+ py = new.py
 End Sub
 
 Sub changedir
  Local string k$
  k$ = Inkey$
+
+ 'reset snake head
+ If stop_flag = 1 Then
+  stop_flag = 0
+  Sprite swap snklen+3,2
+ End If
+
+ 'select direction of travel
  Select Case Asc(k$)
   Case 128 'up arrow
    vx = 0
@@ -91,21 +108,37 @@ Sub changedir
 End Sub
 
 Sub update
- For i=snklen To 1 Step -1
-  x(i) = x(i-1)
-  y(i) = y(i-1)
- Next i
- x(0) = px
- y(0) = py
+ If stop_flag = 0 Then
+  For i=snklen To 1 Step -1
+   x(i) = x(i-1)
+   y(i) = y(i-1)
+  Next i
+  x(0) = px
+  y(0) = py
+ End If
 End Sub
 
 Sub draw
- For i=0 To snklen
-  If x(i)>0 And y(i)>0 Then
-   'update sprite positions
-   Sprite next i+2,x(i),y(i)
-  End If
+ 'draw the head
+ If stop_flag = 1 Then
+  Sprite next snklen+3,x(0),y(0)
+ Else
+  Sprite next 2,x(0),y(0)
+ End If
+
+ 'draw the body
+ For i=1 To snklen
+  Sprite next i+2,x(i),y(i)
  Next i
  Sprite move 'move all sprites
  FRAMEBUFFER copy f,n
+End Sub
+
+Sub collision
+ If stop_flag = 0 Then
+  stop_flag=1
+  vx=0:vy=0
+  Play tone 1000,1000,250
+  Sprite swap 2,snklen+3
+ End If
 End Sub
