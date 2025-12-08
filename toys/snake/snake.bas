@@ -15,8 +15,8 @@ Dim integer exit_flag = 0
 
 'snake properties
 Const snk = RGB(yellow) 'snake color
-Const snklen = 10 'snake length
-Const snkw = 10 'width of snake segments
+Const snklen = 25 'snake length
+Const snkw = 5 'width of snake segments
 Dim integer px = w\2 'head x position
 Dim integer py = h\2 'head y position
 Dim integer vx=1 'head x velocity
@@ -25,21 +25,23 @@ Dim integer stop_flag=0 'snake stopped?
 
 'create a box for each snake segment
 'read it into a sprite
+Const hdid = 2
 Sprite set transparent 0
-For i=0 To snklen
- Box px,py,snkw,snkw,2,snk,snk
- Sprite read i+2,px,py,snkw,snkw
-Next i
+Box px,py,snkw,snkw,2,snk,snk
+Sprite read hdid,px,py,snkw,snkw
+Sprite copy hdid,hdid+1,snklen
 
 'save a red sprite for collisions
 Const hit = RGB(red)
+Const colid = snklen+3
 Box px,py,snkw,snkw,2,hit,hit
-Sprite read snklen+3,px,py,snkw,snkw
+Sprite read colid,px,py,snkw,snkw
+
 
 'initialize snake head and body positions
 Dim x(snklen), y(snklen)
 For i=0 To snklen
- x(i) = px - i*(snkw+2)
+ x(i) = px - i*(snkw+1)
  y(i) = py
 Next i
 
@@ -64,13 +66,13 @@ End
 
 Sub move
  'update x
- new.px = px + vx*(snkw+2)
+ new.px = px + vx*(snkw+1)
  If new.px > w-snkw Then new.px=px:collision
  If new.px < 1 Then new.px=px:collision
  px = new.px
 
  'update y
- new.py = py + vy*(snkw+2)
+ new.py = py + vy*(snkw+1)
  If new.py > h-snkw Then new.py=py:collision
  If new.py < 1 Then new.py=py:collision
  py = new.py
@@ -83,7 +85,7 @@ Sub changedir
  'reset snake head
  If stop_flag = 1 Then
   stop_flag = 0
-  Sprite swap snklen+3,2
+  Sprite swap colid,hdid
  End If
 
  'select direction of travel
@@ -119,19 +121,13 @@ Sub update
 End Sub
 
 Sub draw
- 'draw the head
- If stop_flag = 1 Then
-  Sprite next snklen+3,x(0),y(0)
- Else
-  Sprite next 2,x(0),y(0)
+ If stop_flag = 0 Then
+  For i=0 To snklen
+   Sprite next i+hdid,x(i),y(i)
+  Next i
+  Sprite move 'move all sprites
+  FRAMEBUFFER copy f,n
  End If
-
- 'draw the body
- For i=1 To snklen
-  Sprite next i+2,x(i),y(i)
- Next i
- Sprite move 'move all sprites
- FRAMEBUFFER copy f,n
 End Sub
 
 Sub collision
@@ -139,6 +135,8 @@ Sub collision
   stop_flag=1
   vx=0:vy=0
   Play tone 1000,1000,250
-  Sprite swap 2,snklen+3
+  Sprite swap hdid,colid
+  FRAMEBUFFER copy f,n
+  Save image "snake.bmp"
  End If
 End Sub
