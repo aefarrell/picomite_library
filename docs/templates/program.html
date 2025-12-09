@@ -20,7 +20,7 @@
             <div class="container">
             <div class="card border-success mb-3">
               <div class="card-header row m-0">
-                <div class="col-md-10 p-0"><h3> {{ program.title }} </h3></div>
+                <div class="col-md-10 p-0"><h3> {{ program.title|e }} </h3></div>
                 <div class="col-md-2 p-0"><p class="text-end"> {{ program.date }}</p></div>
               </div>
               <div class="card-body">
@@ -28,7 +28,7 @@
                   <div class="row m-0">
                     {% if program.screenshot %}<div class="col-md-5"><img src="images/{{ program.screenshot }}" class="d-block user-select-none" /></div><div class="col-md-5 p-0">
          {% else %}<div class="col-md-10 p-0">{% endif %}
-                    <p>{{ program.description }}</p>
+                    <p>{{ program.description|e }}</p>
                    </div>
                    <div class="col-md-2 p-0">
                     <p class="text-end"><a href="{{ program.url }}"><button type="button" class="btn btn-secondary">Github</button></a></p>
@@ -37,7 +37,7 @@
                   <div class="row m-0">
                     <div class="col-md-12 p-0">
                     <p><hr /></p>
-                    <pre class="text-success">{{ program.code }}</pre>
+                    <pre class="text-success">{{ program.code|e }}</pre>
                     </div>
                   </div>
                </div>
