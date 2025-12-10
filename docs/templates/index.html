@@ -37,7 +37,7 @@
                 <div class="card-text">
                   <div class="row m-0">
                     {% if card.screenshot %}
-                   <div class="col-md-5"><img src="images/{{ card.screenshot }}" class="d-block user-select-none" /></div>
+                   <div class="col-md-5"><img src="images/{{ card.screenshot }}" class="img-fluid d-block user-select-none" /></div>
                    <div class="col-md-5 p-0">
          {% else %}<div class="col-md-10 p-0">{% endif %}
                     <p>{{ card.description|e }}</p>

@@ -1,7 +1,20 @@
 /*
 Mortgage Calculator
-Calculates mortgage payments, amortization schedule, and plots balance over time.
+Calculates mortgage payments, amort-
+-ization schedule, and plots balance 
+over time.
 Assumes the mortgage compounds monthly.
+After the initial amortization schedule
+is calculated, the user can add 
+payments or modify the payment schedule
+
+a) Add a payment at a specific period
+m) Modify the payments over a range
+p) Print the results to a text file
+r) Reset the payment schedule
+q) Quit the program
+h) Help - display the options
+
 */
 
 Option explicit

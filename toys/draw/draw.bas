@@ -1,10 +1,12 @@
 /* 
-  Simple drawing toy for the PicoCalc
-  Allows drawing on the screen with the arrow keys
-  Press number keys 0-9 to change color
-  Press 'Enter' to draw a square at the current position
-  Press 'S' to save the drawing to draw.bmp
-  Press 'Q' to quit
+Simple drawing toy for the PicoCalc
+Allows drawing on the screen with the
+arrow keys
+
+Number keys 0-9 change the color
+Enter fills in the square
+'s' saves the drawing to draw.bmp
+'q' to quit
 */
 
 ' colour palette

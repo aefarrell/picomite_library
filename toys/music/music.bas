@@ -1,4 +1,10 @@
-'the most annoying musical instrument
+/*
+Tedious Tone Generator
+A simple program to generate tones.
+Use the up and down arrow keys to 
+change the frequency in 100Hz steps.
+'q' to quit.
+*/
 
 Const blk = RGB(black)
 Const cyn = RGB(cyan)
@@ -33,15 +39,15 @@ Loop
 Sub incr
   a$ = Inkey$
   Select Case Asc(a$)
-  Case 128
+  Case 128 'up
     f = Min(f+dlthz,mxhz)
-  Case 129
+  Case 129 'down
     f = Max(f-dlthz,mnhz)
-  case 113
+  case 113 'q
     end
   End Select
 End Sub
 
 sub MM.END
-  print "thanks for playing"
+  print @(0,0) "thanks for playing"
 end sub

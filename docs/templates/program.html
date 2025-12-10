@@ -15,9 +15,6 @@
   
     <main>
       <div class="container py-4">
-      
-          <div class="col-md-9">
-            <div class="container">
             <div class="card border-success mb-3">
               <div class="card-header row m-0">
                 <div class="col-md-10 p-0"><h3> {{ program.title|e }} </h3></div>
@@ -26,7 +23,7 @@
               <div class="card-body">
                 <div class="card-text">
                   <div class="row m-0">
-                    {% if program.screenshot %}<div class="col-md-5"><img src="images/{{ program.screenshot }}" class="d-block user-select-none" /></div><div class="col-md-5 p-0">
+                    {% if program.screenshot %}<div class="col-md-5"><img src="images/{{ program.screenshot }}" class="img-fluid d-block user-select-none" /></div><div class="col-md-5 p-0">
          {% else %}<div class="col-md-10 p-0">{% endif %}
                     <p>{{ program.description|e }}</p>
                    </div>
@@ -41,10 +38,8 @@
                     </div>
                   </div>
                </div>
-              </div>
-             </div>
-             </div>
-             </div>
+            </div>
+      </div>
         
         <footer class="pt-3 mt-4 text-body-secondary border-top">
          <p>Made with <a href="https://getbootstrap.com/">Bootstrap</a> and <a href="https://bootswatch.com/vapor/">Bootswatch Vapor</a>, by <a href="https://github.com/aefarrell">Allan Farrell</a>.</p>
