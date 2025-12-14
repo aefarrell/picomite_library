@@ -25,16 +25,21 @@ Function rk4step(fname$,yt(),t,dt) as integer
  Static integer n = Bound(yt(),1)
 
  'rk arrays
- Static float dts(2+l) = (0.5*dt,0.5*dt,dt)
+ Static float dts(3+l) = (0.0,0.5*dt,0.5*dt,dt)
  Static float rks(3+l) = (dt/6,dt/3,dt/3,dt/6)
  Static float s(n),a(n),k(n)
  Array Set 0,s()
- Array Add yt(),0,k()
+ Array Set 0,k()
 
  'integration step
  Local integer i
  For i=l To 3+l
-  'k_{i} = f(t+dts_i,y_{t}+dts_i*k_i)
+  'y_{t} + dts_i * k_{i-1}
+  Math scale k(),dts(i),k()
+  Math c_add yt(),k(),k()
+  t = t + dts(i)
+
+  'k_{i} = f(t+dts_i,y_{t}+dts_i*k_{i-1})
   flag = Call(fname$,t,k(),k())
   If flag=0 Then
    rk4step=0
@@ -44,12 +49,6 @@ Function rk4step(fname$,yt(),t,dt) as integer
   '\sum_{i=1}^4 rks_i*k_i
   Math scale k(),rks(i),a()
   Math c_add s(),a(),s()
-  If i<(3+l) Then
-   'y_{t} + dts_i * k_i
-   Math scale k(),dts(i),k()
-   Math c_add yt(),k(),k()
-   t = t + dts(i)
-  End If
  Next i
 
  'y_{t+dt} = y_{t} + \sum
