@@ -52,7 +52,7 @@ template_dir = join(script_dir,'templates')
 # walk the directory looking for 'read.me' files and associated '*.bas' files
 root_dir = dirname(script_dir)
 root_url='https://github.com/aefarrell/picomite_library/blob/main'
-categories = [ 'math', 'art', 'utils', 'toys' ]
+categories = [ 'art', 'math', 'toys', 'utils' ]
 cards = { cat:retrieve_cards(join(root_dir,cat)) for cat in categories }
 
 # load templates and generate the html files
