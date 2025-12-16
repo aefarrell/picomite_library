@@ -28,7 +28,7 @@ function rhs(t,y(),dy()) as integer
 
  local float del=o2-o1
  local float den=(m1+m2)-m2*cos(del)^2
- dy(1)=y(2) '\dot{\theta_1} = \omega_1
+ dy(1)=y(2)
  dy(2)=((m2*l1*w1^2)*sin(del)*cos(del)+ m2*g*sin(o2)*cos(del)+ m2*l2*w2^2*sin(del)- (m1+m2)*g*sin(o1))/(l1*den)
  dy(3)=y(4)
  dy(4)=(-m2*l2*w2^2*sin(del)*cos(del)+ (m1+m2)*(g*sin(o1)*cos(del)- l1*w1^2*sin(del) - g*sin(o2)))/(l2*den)
