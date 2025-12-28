@@ -15,30 +15,27 @@ def format_date(value, fmt):
 
 def retrieve_cards(directory):
     cards = []
-    for root, dirs, files in Path.walk(directory):
-        for file in files:
-            if file == "read.me":
-                rme = (root/file).resolve()
-                with rme.open('r') as yml:
-                    readme = yaml.safe_load(yml)
-                    program_file = readme.get('program',None)
-                    program_full = (root/program_file).resolve()
-                    if program_full.is_file():
-                        with program_full.open('r') as bas:
-                            readme['code'] = bas.read()
-                    
-                    relpath = program_full.relative_to(root_dir,walk_up=True).as_posix()
-                    readme['url'] = root_url+relpath
-                
-                screenshot = (root/readme.get('screenshot',None)).resolve()
-                if screenshot.is_file():
-                    destination = output_dir/'images'/screenshot.name
-                    screenshot.copy(destination)
-                    readme['screenshot'] = 'images/' + screenshot.name
-                else:
-                    readme['screenshot'] = None
-                
-                cards.append(readme)
+    for root, _, files in Path.walk(directory):
+        for file in filter(lambda x: x == "read.me", files):
+            yml = (root/file).resolve().read_text()
+            readme = yaml.safe_load(yml)
+            program_file = readme.get('program',None)
+            program_full = (root/program_file).resolve()
+            if program_full.is_file():
+                readme['code'] = program_full.read_text()
+            
+            relpath = program_full.relative_to(root_dir,walk_up=True).as_posix()
+            readme['url'] = root_url+relpath
+            
+            screenshot = (root/readme.get('screenshot',None)).resolve()
+            if screenshot.is_file():
+                destination = output_dir/'images'/screenshot.name
+                screenshot.copy(destination)
+                readme['screenshot'] = 'images/' + screenshot.name
+            else:
+                readme['screenshot'] = None
+            
+            cards.append(readme)
     return cards
 
 # find important directories
@@ -57,19 +54,20 @@ environment = Environment(loader=FileSystemLoader(template_dir),
                           extensions=['jinja2.ext.loopcontrols'])
 environment.filters['format_date'] = format_date
 
-filename = 'index.html'
-index = environment.get_template("index.html")
-content = index.render({ 'cards': cards })
-with open((output_dir/filename), mode="w", encoding="utf-8") as fout:
-    fout.write(content)
+index_tmpl = environment.get_template("index.html")
+content = index_tmpl.render({ 'cards': cards })
+index_out = (output_dir/'index.html')
+index_out.touch()
+index_out.write_text(content, encoding="utf-8")
 
 progfile = environment.get_template("program.html")
 for category in categories:
-    for card in cards[category]:
+    for card in filter(lambda x: x.get('program',None) is not None, cards[category]):
         filename = card['program'] + '.html'
         content = progfile.render({'program': card})
-        with open((output_dir/filename), mode="w", encoding="utf-8") as fout:
-            fout.write(content)
+        file = (output_dir/filename)
+        file.touch()
+        file.write_text(content, encoding="utf-8")
         
     
     
