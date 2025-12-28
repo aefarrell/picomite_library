@@ -17,24 +17,20 @@ def retrieve_cards(directory):
     cards = []
     for root, _, files in Path.walk(directory):
         for file in filter(lambda x: x == "read.me", files):
-            yml = (root/file).resolve().read_text()
-            readme = yaml.safe_load(yml)
-            program_file = readme.get('program',None)
-            program_full = (root/program_file).resolve()
-            if program_full.is_file():
-                readme['code'] = program_full.read_text()
-            
-            relpath = program_full.relative_to(root_dir,walk_up=True).as_posix()
-            readme['url'] = root_url + "/" + relpath
-            
-            screenshot = (root/readme.get('screenshot',None)).resolve()
-            if screenshot.is_file():
+            readme = yaml.safe_load( (root/file).read_text() )
+            program_file = readme.get('program',None) 
+            program_file = root/program_file if program_file else None
+            if program_file is not None and program_file.is_file():
+                readme['code'] = program_file.read_text()
+                relpath = program_file.relative_to(root_dir,walk_up=True).as_posix()
+                readme['url'] = root_url + "/" + relpath
+
+            screenshot= readme.get('screenshot',None)
+            screenshot = root/screenshot if screenshot else None
+            if screenshot is not None and screenshot.is_file():
                 destination = output_dir/'images'/screenshot.name
                 screenshot.copy(destination)
-                readme['screenshot'] = 'images/' + screenshot.name
-            else:
-                readme['screenshot'] = None
-            
+                readme['screenshot_url'] = 'images/' + screenshot.name
             cards.append(readme)
     return cards
 
