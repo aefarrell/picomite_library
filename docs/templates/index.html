@@ -43,8 +43,10 @@
                     <p>{{ card.description|e }}</p>
                    </div>
                    <div class="col-md-2 p-0">
+                    {% if card.program %}
                     <p class="text-end"><a href="{{ card.program }}.html"><button type="button" class="btn btn-success">Source</button></a></p>
                     <p class="text-end"><a href="{{ card.url }}"><button type="button" class="btn btn-secondary">Github</button></a></p>
+                    {% endif %}
                    </div>
                   </div>
                 </div>
