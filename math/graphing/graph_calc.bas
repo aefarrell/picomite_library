@@ -1,135 +1,151 @@
-/* 
+/*
   Graphing calculator for parametric equations
   Use ctrl-p to save a screenshot
 */
-Option explicit
-Option angle degrees
+option explicit
+option angle degrees
 
 'initialize vectors
-Const MAXPTS = 100
-Dim float x(MAXPTS)
-Dim float y(MAXPTS)
+const MAXPTS = 100
+dim float x(MAXPTS)
+dim float y(MAXPTS)
 
 'input functions
-Dim string funx$
-Dim string funy$
-Dim float tmin : Dim float tmax
+dim string funx$
+dim string funy$
+dim float tmin : dim float tmax
 
 'set listener for keypress
-On KEY keypress
+on KEY keypress
 
 ask:
-CLS
-Line Input "x(t)="; funx$
-Line Input "y(t)="; funy$
-Input "t range (min,max)"; tmin,tmax
+cls
+line input "x(t)="; funx$
+line input "y(t)="; funy$
+input "t range (min,max)"; tmin,tmax
 
-CLS
+cls
 draw_axes 10
 draw_fun funx$, funy$, tmin, tmax
-Pause 60000 'pause for a while
-End
+pause 60000 'pause for a while
+end
 
-Sub keypress
- Local a$ As string
- a$ = Inkey$
- Select Case Asc(a$)
- Case 16 'ctrl-p for print screen
-  Local fname$ As string
-  fname$ = "screenshot-"+Str$(Rnd()*1000,0,0)+".bmp"
-  Save Image fname$
- Case Else
-  GoTo Ask
- End Select
-End Sub
+sub keypress
+ local a$ as string
+ a$ = inkey$
+ select case asc(a$)
+ case 16 'ctrl-p for print screen
+  local fname$ as string
+  fname$ = "graph"
+  check_file fname$
+  save Image fname$
+ case else
+  goto Ask
+ end select
+end sub
 
+sub check_file fn$ as string
+local string f$ = dir$(fn$+"*",FILE)
+local string ext = ".bmp"
+local integer i = 0
+do while f$ <> ""
+ inc i
+ f$ = dir$()
+loop
 
-Sub fill_points funx$, funy$, numpts,   tmin, tmax
- Local integer n = numpts
- Local float max.x = 0.0
- Local float max.y = 0.0
+if i > 0 then
+ fn$ = fn$+"-"+format$(i)+ext
+else
+ fn$ = fn$+ext
+end if
+end sub
+
+sub fill_points funx$, funy$, numpts,   tmin, tmax
+ local integer n = numpts
+ local float max.x = 0.0
+ local float max.y = 0.0
 
  'generate points
- Local float min.t = tmin
- Local float max.t = tmax
- Local float delta.t =   (max.t-min.t)/n
- Local float t
- Local integer i
- For i=0 To n-1
+ local float min.t = tmin
+ local float max.t = tmax
+ local float delta.t =   (max.t-min.t)/n
+ local float t
+ local integer i
+ for i=0 to n-1
   t = delta.t*i + min.t
 
-  x(i) = Eval(funx$)
-  If Abs(x(i))>max.x Then   max.x=Abs(x(i))
+  x(i) = eval(funx$)
+  if abs(x(i))>max.x then   max.x=abs(x(i))
 
-  y(i) = Eval(funy$)
-  If Abs(y(i))>max.y Then   max.y=Abs(y(i))
- Next i
+  y(i) = eval(funy$)
+  if abs(y(i))>max.y then   max.y=abs(y(i))
+ next i
 
  'catch null graphs
- If max.x = 0 Then max.x = 1
- If max.y = 0 Then max.y = 1
+ if max.x = 0 then max.x = 1
+ if max.y = 0 then max.y = 1
 
  'add scale
  x(n) = max.x
  y(n) = max.y
-End Sub
+end sub
 
-Sub draw_axes numticks
- Local integer mcount = numticks
+sub draw_axes numticks
+ local integer mcount = numticks
 
  'draw axes
- Local integer xaxis, yaxis
+ local integer xaxis, yaxis
  xaxis = MM.VRES\2
- Line 0,xaxis,MM.HRES,xaxis,, RGB(green)
- Text MM.HRES-1,xaxis-1,"x axis", "RB",7
+ line 0,xaxis,MM.HRES,xaxis,, rgb(green)
+ text MM.HRES-1,xaxis-1,"x axis", "RB",7
 
  yaxis = MM.HRES\2
- Line yaxis,0,yaxis,MM.VRES,, RGB(green)
- Text yaxis-1,1,"y axis","RT",7
+ line yaxis,0,yaxis,MM.VRES,, rgb(green)
+ text yaxis-1,1,"y axis","RT",7
 
  'draw ticks
- Local integer i
- Local float dx, dy
+ local integer i
+ local float dx, dy
  dx = MM.HRES/mcount
  dy = MM.VRES/mcount
- For i=0 To mcount
-  Pixel yaxis+1,Int(i*dy),RGB(green)
-  Pixel Int(i*dx),xaxis+1,RGB(green)
- Next i
-End Sub
+ for i=0 to mcount
+  pixel yaxis+1,int(i*dy),rgb(green)
+  pixel int(i*dx),xaxis+1,rgb(green)
+ next i
+end sub
 
-Sub draw_fun funx$, funy$, tmin, tmax
- Local integer i
- Local float nx.pt.x, nx.pt.y
- Local float ls.pt.x, ls.pt.y
+sub draw_fun funx$, funy$, tmin, tmax
+ local integer i
+ local float nx.pt.x, nx.pt.y
+ local float ls.pt.x, ls.pt.y
 
  'load plotting arrays
  fill_points funx$,funy$,MAXPTS,tmin, tmax
- Local float max.x = x(MAXPTS)
- Local float max.y = y(MAXPTS)
+ local float max.x = x(MAXPTS)
+ local float max.y = y(MAXPTS)
 
  'scale plot
- Local float o.x = MM.HRES/2
- Local float o.y = MM.VRES/2
- Local float scl.x = (o.x-2)/max.x
- Local float scl.y = (o.y-2)/max.y
+ local float o.x = MM.HRES/2
+ local float o.y = MM.VRES/2
+ local float scl.x = (o.x-2)/max.x
+ local float scl.y = (o.y-2)/max.y
 
- Text MM.HRES-1,Int(o.y+2), Str$(max.x,0,3),"RT",7
- Text Int(o.x+2),1,Str$(max.y,0,3), "LT",7
+ text MM.HRES-1,int(o.y+2), str$(max.x,0,3),"RT",7
+ text int(o.x+2),1,str$(max.y,0,3), "LT",7
 
  'draw parametric equations
  ls.pt.x = scl.x*x(0) + o.x
  ls.pt.y = o.y - scl.y*y(0)
 
- For i=1 To (MAXPTS-1)
+ for i=1 to (MAXPTS-1)
   nx.pt.x = scl.x*x(i) + o.x
   nx.pt.y = o.y - scl.y*y(i)
 
-  Line Int(ls.pt.x),Int(ls.pt.y), Int(nx.pt.x),Int(nx.pt.y),1,RGB(blue)
+  line int(ls.pt.x),int(ls.pt.y), int(nx.pt.x),int(nx.pt.y),1,rgb(blue)
 
   ls.pt.x = nx.pt.x
   ls.pt.y = nx.pt.y
 
-  Pause 10
- Next i
-End Sub
+  pause 10
+ next i
+end sub
