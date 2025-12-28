@@ -25,7 +25,7 @@ def retrieve_cards(directory):
                 readme['code'] = program_full.read_text()
             
             relpath = program_full.relative_to(root_dir,walk_up=True).as_posix()
-            readme['url'] = root_url+relpath
+            readme['url'] = root_url + "/" + relpath
             
             screenshot = (root/readme.get('screenshot',None)).resolve()
             if screenshot.is_file():
