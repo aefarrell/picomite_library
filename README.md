@@ -10,6 +10,16 @@ The structure is like this:
 - `utils\` useful utilities
 - `toys\` little toy programs
 
+## Using GUI Controls
+
+PicoMite BASIC comes with a series of gui controls -- buttons, labels etc. -- in addition to the standard drawing features. To use gui controls memory space must be allocated for them, by default PicoMite allocates none. Prior to running any programs that use these advanced graphic features, enter the following at the command prompt
+
+~~~basic
+option gui controls 75
+~~~
+
+This allocates space for up to 75 gui controls in memory. To free up memory, you can set that back to zero.
+
 ## Transferring Files with the PicoCalc
 
 The fastest way to transfer files, in bulk, is via the SD card -- if you have an SD card reader. Alternatively you can connect to the PicoCalc via the serial connection. First turn on the PicoCalc and connect to your computer via the USB-C port on the PicoCalc.
